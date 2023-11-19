@@ -38,7 +38,5 @@ private:
         char const* why = "Accept Exception";
 };
 
-
-
 #endif
 

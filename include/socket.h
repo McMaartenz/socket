@@ -17,6 +17,7 @@
 #include <writeable.h>
 #include <connection.h>
 #include <exception.h>
+#include <HTTP.h>
 
 class Socket : public Writeable {
 public:
@@ -27,11 +28,6 @@ public:
 
         void bind_and_listen(int queue_length);
         void accept(std::function<void(Connection&)> handler);
-};
-
-namespace HTTP {
-        std::string create_response(int status_code, std::string const& page);
-        std::string create_response(int status_code, std::filesystem::path const& path);
 };
 
 #endif
