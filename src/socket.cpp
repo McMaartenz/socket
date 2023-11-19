@@ -72,8 +72,3 @@ std::string HTTP::create_response(int status_code, std::filesystem::path const& 
         return create_response(status_code, oss.str());
 }
 
-SocketException::SocketException() : std::exception() {}
-BindException::BindException() : std::exception() {}
-ListenException::ListenException() : std::exception() {}
-AcceptException::AcceptException() : std::exception() {}
-

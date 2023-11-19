@@ -16,6 +16,7 @@
 
 #include <writeable.h>
 #include <connection.h>
+#include <exception.h>
 
 class Socket : public Writeable {
 public:
@@ -31,38 +32,6 @@ public:
 namespace HTTP {
         std::string create_response(int status_code, std::string const& page);
         std::string create_response(int status_code, std::filesystem::path const& path);
-};
-
-class SocketException : public std::exception {
-public:
-        SocketException();
-        inline virtual char const* what() const noexcept {
-                return "Socket Exception";
-        }
-};
-
-class BindException : public std::exception {
-public:
-        BindException();
-        inline virtual char const* what() const noexcept {
-                return "Bind Exception";
-        }
-};
-
-class ListenException : public std::exception {
-public:
-        ListenException();
-        inline virtual char const* what() const noexcept {
-                return "Listen Exception";
-        }
-};
-
-class AcceptException : public std::exception {
-public:
-        AcceptException();
-        inline virtual char const* what() const noexcept {
-                return "Accept Exception";
-        }
 };
 
 #endif
