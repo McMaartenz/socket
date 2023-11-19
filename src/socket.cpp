@@ -40,13 +40,6 @@ void Socket::accept(std::function<void(Connection&)> handler) {
         handler(connection);
 }
 
-Connection::Connection(int socket_fd, sockaddr_in client_address)
-        : Writeable{socket_fd}, client_address{client_address} {}
-
-void Connection::close() {
-        ::close(socket_fd);
-}
-
 std::string HTTP::create_response(int status_code, std::string const& page) {
         std::ostringstream oss;
         oss << "HTTP/1.1 ";

@@ -15,8 +15,7 @@
 #include <fstream>
 
 #include <writeable.h>
-
-class Connection;
+#include <connection.h>
 
 class Socket : public Writeable {
 public:
@@ -27,15 +26,6 @@ public:
 
         void bind_and_listen(int queue_length);
         void accept(std::function<void(Connection&)> handler);
-};
-
-class Connection : public Writeable {
-public:
-        sockaddr_in client_address;
-
-        Connection(int socket_fd, sockaddr_in client_address);
-
-        void close();
 };
 
 namespace HTTP {
