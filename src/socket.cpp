@@ -43,19 +43,6 @@ void Socket::accept(std::function<void(Connection&)> handler) {
 Connection::Connection(int socket_fd, sockaddr_in client_address)
         : Writeable{socket_fd}, client_address{client_address} {}
 
-std::string Writeable::receive() {
-        char buffer[1024] {};
-        int n = ::read(socket_fd, buffer, sizeof(buffer));
-        return std::string(buffer, n);
-}
-
-Writeable::Writeable() : Writeable(0) {}
-Writeable::Writeable(int socket_fd) : socket_fd{socket_fd} {}
-
-void Writeable::send(std::string const& data) {
-        ::send(socket_fd, data.c_str(), data.length(), 0);
-}
-
 void Connection::close() {
         ::close(socket_fd);
 }

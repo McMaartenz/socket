@@ -14,18 +14,9 @@
 #include <filesystem>
 #include <fstream>
 
+#include <writeable.h>
+
 class Connection;
-
-class Writeable {
-public:
-        int socket_fd;
-
-        Writeable();
-        Writeable(int socket_fd);
-
-        std::string receive();
-        void send(std::string const& data);
-};
 
 class Socket : public Writeable {
 public:

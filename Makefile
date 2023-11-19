@@ -1,4 +1,4 @@
-files := main.cpp socket.cpp
+files := main.cpp socket.cpp writeable.cpp
 CC := g++
 CFlags := -Wall -Wextra -Wpedantic -std=c++23 -I../include
 
