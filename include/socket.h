@@ -13,7 +13,6 @@
 #include <writeable.h>
 #include <connection.h>
 #include <exception.h>
-#include <HTTP.h>
 
 class Socket : public Writeable {
 public:

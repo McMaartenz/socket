@@ -1,4 +1,4 @@
-files := main.cpp socket.cpp writeable.cpp connection.cpp HTTP.cpp
+files := main.cpp socket.cpp writeable.cpp connection.cpp http.cpp server.cpp
 CC := g++
 CFlags := -Wall -Wextra -Wpedantic -std=c++23 -I../include
 

@@ -1,11 +1,12 @@
-#include <socket.h>
+#include <server.h>
+#include <http.h>
 
 void handler(Connection& conn);
 
 int main() {
-        Socket socket(8000);
+        Server server(8000, "www");
         try {
-                socket.bind_and_listen(20);
+                server.bind_and_listen(20);
         } catch (std::exception const& e) {
                 std::cerr << e.what() << std::endl;
                 return 1;
@@ -13,7 +14,7 @@ int main() {
         std::cout << "Listening on 8000\n";
 
         while (true) {
-                socket.accept(handler);
+                server.accept(handler);
         }
 }
 
