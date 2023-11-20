@@ -1,7 +1,7 @@
 #include <writeable.h>
 
 std::vector<char> Writeable::receive() {
-        char buffer[1024] {};
+        char buffer[4096] {};
         int n = ::read(socket_fd, buffer, sizeof(buffer));
         return std::vector(buffer, buffer + n);
 }

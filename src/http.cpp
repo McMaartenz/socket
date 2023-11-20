@@ -10,22 +10,29 @@ HttpRequest HttpConnection::get_data() {
 
         std::string request_line{};
 
-        size_t pos = 0;
-        while (pos < data.size() && data[pos++] != '\n');
-        if (pos >= data.size()) {
-                std::cerr << "Request line too long or invalid\n";
+        std::istringstream iss(&data[0]);
+        if (!std::getline(iss, request_line)) {
+                std::cerr << "Request line invalid or too long\n";
                 return {};
         }
 
-        request_line = std::accumulate(data.begin(), data.begin() + pos, std::string{});
         request.request_line = HTTP::parse_request_line(request_line);
 
+        // Read request headers
+        while (true) {
+                std::string line;
+                bool ok = !!std::getline(iss, line);
+                if (!ok) {
+                        break;
+                }
+
+                std::cout << "Header " << line << std::endl;
+        }
         this->request = request;
         return request;
 }
 
 void HttpConnection::put_data(HttpResponse const& response) {
-        // send attributes
 }
 
 RequestLine HTTP::parse_request_line(std::string const& request_line) {
@@ -36,7 +43,7 @@ RequestLine HTTP::parse_request_line(std::string const& request_line) {
         std::istringstream iss(request_line);
         iss >> method >> directory;
         
-        iss.ignore(1024, '/');
+        iss.ignore(16, '/');
         iss >> version;
 
         result.method = Method::UNSUPPORTED;
