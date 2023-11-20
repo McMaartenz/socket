@@ -1,5 +1,13 @@
 #include <http.h>
 
+std::string Method_to_string(Method method) {
+        switch (method) {
+        case Method::UNSUPPORTED: return "Unsupported";
+        case Method::GET: return "GET";
+        default: return "NotImplemented";
+        }
+}
+
 HttpConnection::HttpConnection(int socket_fd, sockaddr_in client_address) : Connection(socket_fd, client_address) {}
 
 HttpRequest HttpConnection::get_data() {
@@ -56,7 +64,6 @@ void HttpConnection::put_data(HttpResponse const& response) {
 
         send(data);
         close();
-        std::cout << "Handled a connection\n";
 }
 
 RequestLine HTTP::parse_request_line(std::string const& request_line) {

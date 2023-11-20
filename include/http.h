@@ -19,6 +19,8 @@ enum class Method {
         GET
 };
 
+std::string Method_to_string(Method method);
+
 namespace HTTP {
 enum Status {
         // 200

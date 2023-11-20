@@ -29,6 +29,12 @@ void Server::listen(std::function<void(HttpConnection&)> handler) {
                         {"Connection", "close"}
                 };
 
+                HttpRequest& req = httpCon.request;
+                std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] "
+                          << Method_to_string(std::get<Method>(req.request_line.method)) << ' '
+                          << req.request_line.path << ' '
+                          << "HTTP/" << req.request_line.http_version << std::endl;
+
                 response.request_line.status_code = HTTP::Status::OK;
                 response.request_line.http_version = 1.1f;
 
