@@ -9,6 +9,7 @@
 #include <map>
 #include <numeric>
 #include <iostream>
+#include <algorithm>
 
 #include <connection.h>
 
