@@ -10,6 +10,23 @@ std::string Method_to_string(Method method) {
 
 HttpConnection::HttpConnection(int socket_fd, sockaddr_in client_address) : Connection(socket_fd, client_address) {}
 
+HttpRequest::HttpRequest() : HttpRequest(HTTP::Status::OK) {}
+
+HttpRequest::HttpRequest(HTTP::Status status_code) : HttpRequest(status_code, {}) {}
+
+HttpRequest::HttpRequest(HTTP::Status status_code, std::vector<char> const& data) {
+        headers = {
+                {"Server", "Other/1.0 (Unix) (Debian/Unix)"},
+                {"Connection", "close"},
+                {"Content-Length", std::to_string(data.size())}
+        };
+
+        request_line.status_code = status_code;
+        request_line.http_version = 1.1f;
+
+        this->data = data;
+}
+
 HttpRequest HttpConnection::get_data() {
         HttpRequest request;
 

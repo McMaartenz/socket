@@ -4,7 +4,6 @@
 #include <map>
 #include <string>
 #include <filesystem>
-#include <functional>
 
 #include <socket.h>
 #include <http.h>
@@ -17,7 +16,7 @@ public:
         void map(std::string route, std::filesystem::path const& file);
         void unmap(std::string route);
 
-        void listen(std::function<void(HttpConnection&)> handler);
+        void listen();
 
 protected:
         using Socket::accept;

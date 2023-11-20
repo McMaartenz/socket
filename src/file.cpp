@@ -11,3 +11,8 @@ std::string read_to_string(std::filesystem::path path) {
         return ss.str();
 }
 
+std::vector<char> read_to_vector(std::filesystem::path path) {
+        std::string content = read_to_string(path);
+        return std::vector<char>(content.begin(), content.end());
+}
+

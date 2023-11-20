@@ -15,49 +15,43 @@ void Server::unmap(std::string route) {
         routes.erase(route);
 }
 
-void Server::listen(std::function<void(HttpConnection&)> handler) {
+void Server::listen() {
         while (true) {
                 Connection connection = accept();
                 HttpConnection httpCon{connection.socket_fd, connection.client_address};
                 httpCon.get_data();
 
-                std::string content{};
-
-                HttpResponse response;
-                response.headers = {
-                        {"Server", "Other/1.0 (Unix) (Debian/Linux)"},
-                        {"Connection", "close"}
-                };
-
                 HttpRequest& req = httpCon.request;
+                Method method = std::get<Method>(req.request_line.method);
+
                 std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] "
-                          << Method_to_string(std::get<Method>(req.request_line.method)) << ' '
+                          << Method_to_string(method) << ' '
                           << req.request_line.path << ' '
                           << "HTTP/" << req.request_line.http_version << std::endl;
 
-                response.request_line.status_code = HTTP::Status::OK;
-                response.request_line.http_version = 1.1f;
-
-                decltype(auto) path = routes.find(httpCon.request.request_line.path.string());
-                if (path == routes.end()) {
-                        response.request_line.status_code = HTTP::Status::NOT_FOUND;
-                        std::string file_data = read_to_string(root / "404.html");
-                        response.data = std::vector<char>(file_data.begin(), file_data.end());
-
-                        response.headers["Content-Type"] = "text/html;charset=UTF-8";
-                        response.headers["Content-Length"] = std::to_string(file_data.length());
-                        httpCon.put_data(response);
-                        httpCon.close();
-                        continue;
+                HttpResponse response;
+                switch (method) {
+                case Method::UNSUPPORTED: {
+                        response = HttpResponse(HTTP::Status::METHOD_NOT_ALLOWED);
+                        break;
                 }
 
-                std::string file_data = read_to_string(path->second);
-                response.data = std::vector<char>(file_data.begin(), file_data.end());
+                case Method::GET: {
+                        if (auto path = routes.find(req.request_line.path.string()); path != routes.end()) {
+                                response = HttpRequest(HTTP::Status::OK, read_to_vector(path->second));
+                        } else {
+                                response = HttpRequest(HTTP::Status::NOT_FOUND, read_to_vector(root / "404.html"));
+                        }
+                        break;
+                }
 
-                response.headers["Content-Type"] = "text/html;charset=UTF-8";
-                response.headers["Content-Length"] = std::to_string(file_data.length());
+                default: {
+                        response = HttpRequest(HTTP::Status::NOT_IMPLEMENTED);
+                        break;
+                }
+                }
+
                 httpCon.put_data(response);
-                httpCon.close();
 
                 // handler(httpCon);
         }

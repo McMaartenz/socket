@@ -27,7 +27,11 @@ enum Status {
         OK = 200,
         
         // 400
-        NOT_FOUND = 404
+        NOT_FOUND = 404,
+        METHOD_NOT_ALLOWED = 405,
+
+        // 500
+        NOT_IMPLEMENTED = 501
 };
 }
 
@@ -42,6 +46,10 @@ public:
         RequestLine request_line;
         std::map<std::string, std::string> headers;
         std::vector<char> data;
+
+        HttpRequest();
+        HttpRequest(HTTP::Status status_code);
+        HttpRequest(HTTP::Status status_code, std::vector<char> const& data);
 };
 
 using HttpResponse = HttpRequest;
