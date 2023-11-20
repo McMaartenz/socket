@@ -26,7 +26,7 @@ struct RequestLine {
 class HttpRequest {
 public:
         RequestLine request_line;
-        std::map<std::string, std::string> attributes;
+        std::map<std::string, std::string> headers;
         std::vector<char> data;
 };
 

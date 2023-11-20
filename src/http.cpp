@@ -22,11 +22,15 @@ HttpRequest HttpConnection::get_data() {
         while (true) {
                 std::string line;
                 bool ok = !!std::getline(iss, line);
-                if (!ok) {
-                        break;
-                }
+                if (!ok) break;
+                if (line.empty() || line == "\r") break; // data comes now
 
-                std::cout << "Header " << line << std::endl;
+                std::string header_key, header_val;
+                std::istringstream line_iss(line);
+                line_iss >> header_key >> header_val;
+
+                header_key.pop_back();
+                request.headers[header_key] = header_val;
         }
         this->request = request;
         return request;
