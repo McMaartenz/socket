@@ -20,7 +20,22 @@ void Server::listen(std::function<void(HttpConnection&)> handler) {
                 Connection connection = accept();
                 HttpConnection httpCon{connection.socket_fd, connection.client_address};
                 httpCon.get_data();
-                handler(httpCon);
+
+                std::string content{};
+
+                HttpResponse response;
+                response.headers = {
+                        {"Server", "Other/1.0 (Unix) (Debian/Linux)"},
+                        {"Connection", "close"}
+                };
+
+                decltype(auto) path = routes.find(httpCon.request.request_line.path.string());
+                if (path == routes.end()) {
+                        response.request_line.status_code = HTTP::Status::NOT_FOUND;
+                }
+
+                response.request_line.status_code = HTTP::Status::OK;
+                // handler(httpCon);
         }
 }
 

@@ -10,6 +10,7 @@
 #include <numeric>
 #include <iostream>
 #include <algorithm>
+#include <variant>
 
 #include <connection.h>
 
@@ -18,8 +19,18 @@ enum class Method {
         GET
 };
 
+namespace HTTP {
+enum Status {
+        // 200
+        OK = 200,
+        
+        // 400
+        NOT_FOUND = 404
+};
+}
+
 struct RequestLine {
-        Method method;
+        std::variant<Method, HTTP::Status> method, status_code;
         std::filesystem::path path;
         float http_version;
 };
