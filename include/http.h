@@ -58,9 +58,6 @@ public:
 
 namespace HTTP {
         RequestLine parse_request_line(std::string const& request_line);
-
-        std::string create_response(int status_code, std::string const& page);
-        std::string create_response(int status_code, std::filesystem::path const& path);
 };
 
 #endif
