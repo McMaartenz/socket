@@ -21,6 +21,10 @@ HttpRequest::HttpRequest(HTTP::Status status_code, std::vector<char> const& data
                 {"Content-Length", std::to_string(data.size())}
         };
 
+        if (!data.empty()) {
+                headers["Content-Type"] = "text/html;charset=UTF-8";
+        }
+
         request_line.status_code = status_code;
         request_line.http_version = 1.1f;
 
