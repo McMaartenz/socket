@@ -27,7 +27,7 @@ void Socket::bind_and_listen(int queue_length) {
         }
 }
 
-void Socket::accept(std::function<void(Connection&)> handler) {
+Connection Socket::accept() {
         sockaddr_in client_address;
         socklen_t length = sizeof(client_address);
 
@@ -37,6 +37,6 @@ void Socket::accept(std::function<void(Connection&)> handler) {
         }
 
         Connection connection(conn_socket_fd, client_address);
-        handler(connection);
+        return connection;
 }
 

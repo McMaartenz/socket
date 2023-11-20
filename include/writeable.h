@@ -3,7 +3,7 @@
 
 #include <sys/socket.h>
 #include <unistd.h>
-#include <string>
+#include <vector>
 
 class Writeable {
 public:
@@ -12,8 +12,8 @@ public:
         Writeable();
         Writeable(int socket_fd);
 
-        std::string receive();
-        void send(std::string const& data);
+        std::vector<char> receive();
+        void send(std::vector<char> const& data);
 };
 
 #endif

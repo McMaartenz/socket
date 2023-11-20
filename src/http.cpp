@@ -1,5 +1,50 @@
 #include <http.h>
 
+HttpConnection::HttpConnection(int socket_fd, sockaddr_in client_address) : Connection(socket_fd, client_address) {}
+
+HttpRequest HttpConnection::get_data() {
+        HttpRequest request;
+
+        request.data = receive();
+        auto& data = request.data;
+
+        std::string request_line{};
+
+        size_t pos = 0;
+        while (pos < data.size() && data[pos++] != '\n');
+        if (pos >= data.size()) {
+                std::cerr << "Request line too long or invalid\n";
+                return {};
+        }
+
+        request_line = std::accumulate(data.begin(), data.begin() + pos, std::string{});
+        request.request_line = HTTP::parse_request_line(request_line);
+        return request;
+}
+
+void HttpConnection::put_data(HttpResponse const& response) {
+        // send attributes
+}
+
+RequestLine HTTP::parse_request_line(std::string const& request_line) {
+        RequestLine result{};
+
+        std::string method, directory;
+        float version;
+        std::istringstream iss(request_line);
+        iss >> method >> directory >> version;
+
+        result.method = Method::UNSUPPORTED;
+        if (method == "GET") {
+                result.method = Method::GET;
+        } 
+
+        result.path = {directory};
+        result.http_version = version;
+
+        return result;
+}
+
 std::string HTTP::create_response(int status_code, std::string const& page) {
         std::ostringstream oss;
         oss << "HTTP/1.1 ";

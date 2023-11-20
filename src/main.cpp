@@ -5,6 +5,9 @@ void handler(Connection& conn);
 
 int main() {
         Server server(8000, "www");
+
+        server.map("/", "index.html");
+
         try {
                 server.bind_and_listen(20);
         } catch (std::exception const& e) {
@@ -13,14 +16,11 @@ int main() {
         }
         std::cout << "Listening on 8000\n";
 
-        while (true) {
-                server.accept(handler);
-        }
+        server.listen();
 }
 
 void handler(Connection& conn) {
         std::cout << "New connection\n";
-        conn.send(HTTP::create_response(200, std::filesystem::path{"www/index.html"}));
         conn.close();
 }
 

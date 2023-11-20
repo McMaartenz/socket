@@ -1,15 +1,15 @@
 #include <writeable.h>
 
-std::string Writeable::receive() {
+std::vector<char> Writeable::receive() {
         char buffer[1024] {};
         int n = ::read(socket_fd, buffer, sizeof(buffer));
-        return std::string(buffer, n);
+        return std::vector(buffer, buffer + n);
 }
 
 Writeable::Writeable() : Writeable(0) {}
 Writeable::Writeable(int socket_fd) : socket_fd{socket_fd} {}
 
-void Writeable::send(std::string const& data) {
-        ::send(socket_fd, data.c_str(), data.length(), 0);
+void Writeable::send(std::vector<char> const& data) {
+        ::send(socket_fd, &data[0], data.size(), 0);
 }
 

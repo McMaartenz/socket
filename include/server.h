@@ -14,6 +14,11 @@ public:
         void map(std::string route, std::filesystem::path const& file);
         void unmap(std::string route);
 
+        void listen();
+
+protected:
+        using Socket::accept;
+
 private:
         std::filesystem::path root;
         std::map<std::string, std::filesystem::path> routes;

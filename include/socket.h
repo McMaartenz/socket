@@ -22,7 +22,7 @@ public:
         ~Socket();
 
         void bind_and_listen(int queue_length);
-        void accept(std::function<void(Connection&)> handler);
+        Connection accept();
 };
 
 #endif
