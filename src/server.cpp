@@ -39,6 +39,7 @@ void Server::listen() {
                 switch (method) {
                 case Method::UNSUPPORTED: {
                         response = HttpResponse(HTTP::Status::METHOD_NOT_ALLOWED);
+                        response.headers["Allow"] = "GET";
                         break;
                 }
 
