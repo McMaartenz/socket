@@ -11,6 +11,12 @@ void Server::map(std::string route, std::filesystem::path const& file) {
         routes[route] = root / file;
 }
 
+void Server::bulk_map(std::initializer_list<std::pair<std::string, std::filesystem::path>> routes) {
+        for (auto& route : routes) {
+                map(route.first, route.second);
+        }
+}
+
 void Server::unmap(std::string route) {
         routes.erase(route);
 }

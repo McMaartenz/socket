@@ -6,8 +6,10 @@ void handler(HttpConnection& con);
 int main() {
         Server server(8000, "www");
 
-        server.map("/", "index.html");
-        server.map("/index.html", "index.html");
+        server.bulk_map({
+                {"/", "index.html"},
+                {"/index.html", "index.html"},
+        });
 
         try {
                 server.bind_and_listen(20);

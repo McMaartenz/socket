@@ -14,6 +14,7 @@ public:
         Server(uint16_t port, std::filesystem::path root);
 
         void map(std::string route, std::filesystem::path const& file);
+        void bulk_map(std::initializer_list<std::pair<std::string, std::filesystem::path>> routes);
         void unmap(std::string route);
 
         void listen();
