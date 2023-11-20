@@ -59,7 +59,7 @@ HttpRequest HttpConnection::get_data() {
                 line_iss >> header_key >> header_val;
 
                 header_key.pop_back();
-                std::transform(header_key.begin(), header_key.end(), header_key.begin(), [](uint8_t c){ return std::tolower(c); });
+                std::transform(header_key.begin(), header_key.end(), header_key.begin(), ::tolower);
                 request.headers[header_key] = header_val;
         }
 

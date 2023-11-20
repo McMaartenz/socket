@@ -6,7 +6,7 @@ void handler(HttpConnection& con);
 int main() {
         Server server(8000, "www");
 
-        server.bulk_map({
+        server.map_static_bulk({
                 {"/", "index.html"},
                 {"/index.html", "index.html"},
         });

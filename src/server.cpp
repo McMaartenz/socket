@@ -2,7 +2,7 @@
 
 Server::Server(uint16_t port, std::filesystem::path root) : Socket(port), root{root} {}
 
-void Server::map(std::string route, std::filesystem::path const& file) {
+void Server::map_static(std::string route, std::filesystem::path const& file) {
         if (!std::filesystem::exists(root / file)) {
                 std::cerr << "File not mapped: " << file << std::endl;
                 return;
@@ -11,13 +11,13 @@ void Server::map(std::string route, std::filesystem::path const& file) {
         routes[route] = root / file;
 }
 
-void Server::bulk_map(std::initializer_list<std::pair<std::string, std::filesystem::path>> routes) {
+void Server::map_static_bulk(std::initializer_list<std::pair<std::string, std::filesystem::path>> routes) {
         for (auto& route : routes) {
-                map(route.first, route.second);
+                map_static(route.first, route.second);
         }
 }
 
-void Server::unmap(std::string route) {
+void Server::unmap_static(std::string route) {
         routes.erase(route);
 }
 
@@ -59,8 +59,6 @@ void Server::listen() {
                 }
 
                 httpCon.put_data(response);
-
-                // handler(httpCon);
         }
 }
 
