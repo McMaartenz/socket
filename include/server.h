@@ -4,8 +4,10 @@
 #include <map>
 #include <string>
 #include <filesystem>
+#include <functional>
 
 #include <socket.h>
+#include <http.h>
 
 class Server : public Socket {
 public:
@@ -14,7 +16,7 @@ public:
         void map(std::string route, std::filesystem::path const& file);
         void unmap(std::string route);
 
-        void listen();
+        void listen(std::function<void(HttpConnection&)> handler);
 
 protected:
         using Socket::accept;

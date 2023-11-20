@@ -1,7 +1,7 @@
 #include <server.h>
 #include <http.h>
 
-void handler(Connection& conn);
+void handler(HttpConnection& con);
 
 int main() {
         Server server(8000, "www");
@@ -16,11 +16,15 @@ int main() {
         }
         std::cout << "Listening on 8000\n";
 
-        server.listen();
+        server.listen(handler);
 }
 
-void handler(Connection& conn) {
-        std::cout << "New connection\n";
-        conn.close();
+void handler(HttpConnection& con) {
+        HttpRequest& req = con.request;
+        std::cout << "New connection from " << con.ip() << ':' << con.port()
+                  << " with version HTTP/" << req.request_line.http_version
+                  << " for directory: " << req.request_line.path << std::endl;
+
+        con.close();
 }
 

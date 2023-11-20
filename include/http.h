@@ -34,10 +34,12 @@ using HttpResponse = HttpRequest;
 
 class HttpConnection : public Connection {
 public:
-      HttpConnection(int socket_fd, sockaddr_in client_address);  
+        HttpRequest request;
 
-      HttpRequest get_data();
-      void put_data(HttpRequest const& request);
+        HttpConnection(int socket_fd, sockaddr_in client_address);  
+
+        HttpRequest get_data();
+        void put_data(HttpRequest const& request);
 };
 
 namespace HTTP {

@@ -19,6 +19,8 @@ HttpRequest HttpConnection::get_data() {
 
         request_line = std::accumulate(data.begin(), data.begin() + pos, std::string{});
         request.request_line = HTTP::parse_request_line(request_line);
+
+        this->request = request;
         return request;
 }
 
@@ -29,10 +31,13 @@ void HttpConnection::put_data(HttpResponse const& response) {
 RequestLine HTTP::parse_request_line(std::string const& request_line) {
         RequestLine result{};
 
-        std::string method, directory;
         float version;
+        std::string method, directory;
         std::istringstream iss(request_line);
-        iss >> method >> directory >> version;
+        iss >> method >> directory;
+        
+        iss.ignore(1024, '/');
+        iss >> version;
 
         result.method = Method::UNSUPPORTED;
         if (method == "GET") {

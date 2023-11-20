@@ -3,6 +3,8 @@
 
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <string>
 
 #include <writeable.h>
 
@@ -13,6 +15,8 @@ public:
         Connection(int socket_fd, sockaddr_in client_address);
 
         void close();
+        std::string ip() const;
+        uint16_t port() const;
 };
 
 #endif

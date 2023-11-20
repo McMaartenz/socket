@@ -1,5 +1,4 @@
 #include <server.h>
-#include <http.h>
 
 Server::Server(uint16_t port, std::filesystem::path root) : Socket(port), root{root} {}
 
@@ -16,12 +15,12 @@ void Server::unmap(std::string route) {
         routes.erase(route);
 }
 
-void Server::listen() {
+void Server::listen(std::function<void(HttpConnection&)> handler) {
         while (true) {
                 Connection connection = accept();
                 HttpConnection httpCon{connection.socket_fd, connection.client_address};
                 httpCon.get_data();
-                std::cout << "New connection\n";
+                handler(httpCon);
         }
 }
 
