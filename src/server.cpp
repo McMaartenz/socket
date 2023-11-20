@@ -31,10 +31,15 @@ void Server::listen(std::function<void(HttpConnection&)> handler) {
 
                 response.request_line.status_code = HTTP::Status::OK;
                 response.request_line.http_version = 1.1f;
- 
+
                 decltype(auto) path = routes.find(httpCon.request.request_line.path.string());
                 if (path == routes.end()) {
                         response.request_line.status_code = HTTP::Status::NOT_FOUND;
+                        std::string file_data = read_to_string(root / "404.html");
+                        response.data = std::vector<char>(file_data.begin(), file_data.end());
+
+                        response.headers["Content-Type"] = "text/html;charset=UTF-8";
+                        response.headers["Content-Length"] = std::to_string(file_data.length());
                 }
 
                 httpCon.put_data(response);

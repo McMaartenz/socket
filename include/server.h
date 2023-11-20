@@ -8,6 +8,7 @@
 
 #include <socket.h>
 #include <http.h>
+#include <file.h>
 
 class Server : public Socket {
 public:

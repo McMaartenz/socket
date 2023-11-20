@@ -47,8 +47,12 @@ void HttpConnection::put_data(HttpResponse const& response) {
                 out << header.first << ": " << header.second << std::endl;
         }
 
+        // Mark border between header, data
+        out << std::endl;
+
         std::string joined = out.str();
         std::vector<char> data(joined.begin(), joined.end());
+        data.insert(data.end(), response.data.begin(), response.data.end());
 
         send(data);
         close();
