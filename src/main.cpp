@@ -11,12 +11,7 @@ int main() {
                 {"/index.html", "index.html"},
         });
 
-        try {
-                server.bind_and_listen(20);
-        } catch (std::exception const& e) {
-                std::cerr << e.what() << std::endl;
-                return 1;
-        }
+        server.bind_and_listen(20);
 
         std::cout << "Listening on 8000\n";
         server.listen();
