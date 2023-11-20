@@ -39,6 +39,20 @@ HttpRequest HttpConnection::get_data() {
 }
 
 void HttpConnection::put_data(HttpResponse const& response) {
+        std::ostringstream out;
+        out << "HTTP/" << response.request_line.http_version << ' ';
+        out << (uint32_t)std::get<HTTP::Status>(response.request_line.status_code) << std::endl;
+
+        for (decltype(auto) header : response.headers) {
+                out << header.first << ": " << header.second << std::endl;
+        }
+
+        std::string joined = out.str();
+        std::vector<char> data(joined.begin(), joined.end());
+
+        send(data);
+        close();
+        std::cout << "Handled a connection\n";
 }
 
 RequestLine HTTP::parse_request_line(std::string const& request_line) {

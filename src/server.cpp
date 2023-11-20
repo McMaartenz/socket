@@ -29,12 +29,16 @@ void Server::listen(std::function<void(HttpConnection&)> handler) {
                         {"Connection", "close"}
                 };
 
+                response.request_line.status_code = HTTP::Status::OK;
+                response.request_line.http_version = 1.1f;
+ 
                 decltype(auto) path = routes.find(httpCon.request.request_line.path.string());
                 if (path == routes.end()) {
                         response.request_line.status_code = HTTP::Status::NOT_FOUND;
                 }
 
-                response.request_line.status_code = HTTP::Status::OK;
+                httpCon.put_data(response);
+
                 // handler(httpCon);
         }
 }
