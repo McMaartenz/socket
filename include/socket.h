@@ -14,14 +14,23 @@
 #include <connection.h>
 #include <exception.h>
 
+/// Manages connections
 class Socket : public Writeable {
 public:
         sockaddr_in address;
 
+        /** Create a socket
+         * @param port Port to listen on
+         */
         Socket(uint16_t port);
         ~Socket();
 
+        /** Bind and listen to the configured port
+         * @param queue_length Length of max pending connections
+         */
         void bind_and_listen(int queue_length);
+
+        /// Accept a connection
         Connection accept();
 };
 

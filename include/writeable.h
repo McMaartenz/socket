@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <vector>
 
+/// A writeable stream
 class Writeable {
 public:
         int socket_fd;
@@ -12,7 +13,10 @@ public:
         Writeable();
         Writeable(int socket_fd);
 
+        /// Receive a buffer of data
         std::vector<char> receive();
+
+        /// Send a buffer of data
         void send(std::vector<char> const& data);
 };
 
