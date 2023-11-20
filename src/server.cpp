@@ -40,9 +40,18 @@ void Server::listen(std::function<void(HttpConnection&)> handler) {
 
                         response.headers["Content-Type"] = "text/html;charset=UTF-8";
                         response.headers["Content-Length"] = std::to_string(file_data.length());
+                        httpCon.put_data(response);
+                        httpCon.close();
+                        continue;
                 }
 
+                std::string file_data = read_to_string(path->second);
+                response.data = std::vector<char>(file_data.begin(), file_data.end());
+
+                response.headers["Content-Type"] = "text/html;charset=UTF-8";
+                response.headers["Content-Length"] = std::to_string(file_data.length());
                 httpCon.put_data(response);
+                httpCon.close();
 
                 // handler(httpCon);
         }
