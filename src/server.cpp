@@ -48,8 +48,10 @@ void Server::listen() {
 
                         if (auto path = routes.find(route); path != routes.end()) {
                                 response = HttpRequest(HTTP::Status::OK, read_to_vector(path->second));
+                                std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] gave: " << path->first << std::endl;
                         } else {
                                 response = HttpRequest(HTTP::Status::NOT_FOUND, read_to_vector(root / "404.html"));
+                                std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] gave: 404\n";
                         }
                         break;
                 }
