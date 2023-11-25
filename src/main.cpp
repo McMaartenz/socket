@@ -8,7 +8,6 @@ int main() {
 
         server.map_static_bulk({
                 {"/", "index.html"},
-                {"/index.html", "index.html"},
         });
 
         server.bind_and_listen(20);
