@@ -44,20 +44,13 @@ void Server::listen() {
                 }
 
                 case Method::GET: {
-                        // Is static?
                         std::string route = req.request_line.path.string();
-                        std::string route_with_index = route + "/index.html";
 
-                        auto path = routes.find(route);
-                        auto path_index = routes.find(route_with_index);
-
-                        if (path == routes.end() && path_index == routes.end()) {
-                               response = HttpRequest(HTTP::Status::NOT_FOUND, read_to_vector(root / "404.html"));
-                               break;
+                        if (auto path = routes.find(route); path != routes.end()) {
+                                response = HttpRequest(HTTP::Status::OK, read_to_vector(path->second));
+                        } else {
+                                response = HttpRequest(HTTP::Status::NOT_FOUND, read_to_vector(root / "404.html"));
                         }
-
-                        auto const& file_path = (path != routes.end() ? path : path_index)->second;
-                        response = HttpRequest(HTTP::Status::OK, read_to_vector(file_path));
                         break;
                 }
 
