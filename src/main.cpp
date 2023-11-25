@@ -1,7 +1,7 @@
 #include <server.h>
 #include <http.h>
 
-void handler(HttpConnection& con);
+HttpResponse sample(HttpRequest& req);
 
 int main() {
         Server server(8000, "www");
@@ -10,9 +10,15 @@ int main() {
                 {"/", "index.html"},
         });
 
+        server.map(Method::GET, "/sample", ::sample);
+
         server.bind_and_listen(20);
 
         std::cout << "Listening on 8000\n";
         server.listen();
+}
+
+HttpResponse sample(HttpRequest& req) {
+        return HttpResponse(HTTP::Status::OK, read_to_vector("/sample/index.html"));
 }
 

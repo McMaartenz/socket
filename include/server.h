@@ -4,10 +4,13 @@
 #include <map>
 #include <string>
 #include <filesystem>
+#include <functional>
 
 #include <socket.h>
 #include <http.h>
 #include <file.h>
+
+using HttpHandler = std::function<HttpResponse(HttpRequest&)>;
 
 /// Manages and handles connections, with routes configured
 class Server : public Socket {
@@ -29,6 +32,13 @@ public:
          */
         void map_static_bulk(std::initializer_list<std::pair<std::string, std::filesystem::path>> routes);
 
+        /** Map a handler to a route
+         * @param method HTTP method to accept
+         * @param route Route to bind to
+         * @param handler Procedure to handle request
+         */
+        void map(Method method, std::string route, HttpHandler handler);
+
         /// Unmap a bound file
         void unmap_static(std::string route);
 
@@ -41,6 +51,7 @@ protected:
 private:
         std::filesystem::path root;
         std::map<std::string, std::filesystem::path> routes;
+        std::map<std::string, std::map<Method, HttpHandler>> route_handlers;
 };
 
 #endif

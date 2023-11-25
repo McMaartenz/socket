@@ -21,6 +21,23 @@ void Server::unmap_static(std::string route) {
         routes.erase(route);
 }
 
+void Server::map(Method method, std::string route, HttpHandler handler) {
+        auto route_map = route_handlers.find(route);
+        if (route_map == route_handlers.end()) {
+                route_handlers.insert({route, {}});
+                route_map = route_handlers.find(route);
+        }
+
+        auto& handler_map = route_map->second;
+        auto stored_handler = handler_map.find(method);
+        if (stored_handler != handler_map.end()) {
+                std::cerr << "Handler already stored for: " << Method_to_string(method) << ' ' << route << std::endl;
+                return;
+        }
+
+        handler_map.insert({method, handler});
+}
+
 void Server::listen() {
         while (true) {
                 Connection connection = accept();
