@@ -53,33 +53,50 @@ void Server::listen() {
                           << "HTTP/" << req.request_line.http_version << std::endl;
 
                 HttpResponse response;
-                switch (method) {
-                case Method::UNSUPPORTED: {
+
+                if (method == Method::UNSUPPORTED) {
                         response = HttpResponse(HTTP::Status::METHOD_NOT_ALLOWED);
                         response.headers["Allow"] = "GET";
-                        break;
-                }
+                        httpCon.put_data(response);
+                        continue;
+                } 
 
-                case Method::GET: {
-                        std::string route = req.request_line.path.string();
-
-                        if (auto path = routes.find(route); path != routes.end()) {
-                                response = HttpRequest(HTTP::Status::OK, read_to_vector(path->second));
-                                std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] gave: " << path->first << std::endl;
+                // Find function handler
+                std::string route = req.request_line.path.string();
+                if (auto path = route_handlers.find(route); path != route_handlers.end()) {
+                        auto& mapped_handlers = path->second;
+                        if (auto stored_handler = mapped_handlers.find(method); stored_handler != mapped_handlers.end()) {
+                                response = (stored_handler->second)(req);
                         } else {
-                                response = HttpRequest(HTTP::Status::NOT_FOUND, read_to_vector(root / "404.html"));
-                                std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] gave: 404\n";
+                                // Print other available handlers for route (Excepting static)
+                                response = HttpResponse(HTTP::Status::METHOD_NOT_ALLOWED);
+                                std::string allowed_headers = "";
+                                for (auto it = mapped_handlers.begin(); it != mapped_handlers.end(); it++) {
+                                        if (!allowed_headers.empty()) {
+                                                allowed_headers += ", ";
+                                        }
+
+                                        allowed_headers += Method_to_string(it->first);
+                                }
+
+                                response.headers["Allow"] = allowed_headers;
                         }
-                        break;
+                        
+                        httpCon.put_data(response);
+                        continue;
                 }
 
-                default: {
-                        response = HttpRequest(HTTP::Status::NOT_IMPLEMENTED);
-                        break;
-                }
+                // Find static handler
+                if (auto path = routes.find(route); method == Method::GET && path != routes.end()) {
+                        response = HttpResponse(HTTP::Status::OK, read_to_vector(path->second)); 
+                        std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] gave: " << path->first << std::endl;
+                } else {
+                        response = HttpResponse(HTTP::Status::NOT_FOUND, read_to_vector(root / "404.html"));
+                        std::cout << '[' << httpCon.ip() << ':' << httpCon.port() << "] gave: 404\n";
                 }
 
                 httpCon.put_data(response);
+                continue;
         }
 }
 

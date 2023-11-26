@@ -19,6 +19,12 @@ int main() {
 }
 
 HttpResponse sample(HttpRequest& req) {
-        return HttpResponse(HTTP::Status::OK, read_to_vector("/sample/index.html"));
+        if (auto user_agent = req.headers.find("user-agent"); user_agent != req.headers.end()) {
+                std::cout << "The user agent passed with this request is: " << user_agent->second << std::endl;
+        } else {
+                std::cout << "This request contained no user agent\n";
+        }
+
+        return HttpResponse(HTTP::Status::OK, read_to_vector("www/sample/index.html"));
 }
 
